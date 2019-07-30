@@ -1,0 +1,101 @@
+{% load static %}
+<head>
+    <title>Applying Cafe</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-light border-bottom shadow-sm">
+        <h5 class="my-0 mr-md-auto font-weight-normal" id="PJname"><a href="{% url 'home' %}">Varysta</a></h5>
+        <nav class="my-2 my-md-0 mr-md-3">
+            <a id="NavItem" href="{% url 'new' %}"><button type="button">Write</button></a>
+
+            {% if user.is_authenticated %}
+            <a id="NavItem" href="{% url 'logout' %}"><button type="button">Log out</button></a>
+            {% else %}
+            <a id="NavItem" href="{% url 'login' %}"><button type="button">Log in</button></a>
+            <a id="NavItem" href="{% url 'signup' %}"><button type="button">Sign Up</button></a>
+            
+            {%endif%}
+            <a id="NavItem" href="(소개페이지)"><button type="button">서비스 소개</button></a>
+
+            {% if error %}
+            <p style="color:red;">{{error}}</p>
+            {% endif %}
+        </nav>
+    </div>
+
+    <div class="container" style="text-align:center;">
+        <form action="{% url 'create' %}" method="POST" class="cafelist" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <br>
+        <div class='cafelist'>
+            <div class="list1">
+                <b class="cafename">카페 이름: </b> <input type="text" name='title' placeholder="카페 이름을 입력">
+            </div>
+            <br>
+            <div class="list2">
+                <b class='cafeadress'>주소:</b> <input type="text" name='address' placeholder="주소를 입력">
+            </div>
+            <br>
+            <div class="list2">
+                <b class='cafenumber'>전화번호: </b> <input type="text" name='contact' placeholder="전화번호를 입력">
+            </div>
+            <br>
+            <div class="list2">
+                <b class='cafenumber'>이미지: </b> <input type="file" name='image'>
+            </div>
+            
+        </div>
+        <br><br>
+
+        <input class="btn-default" type="submit" value="제출하기">
+    </form>
+    </div>
+</body>
+<style>
+    .cafename {
+        margin-right: 40px;
+    }
+    .cafeadress {
+        margin-right: 72px;
+    }
+    .cafenumber {
+        margin-right: 44px;
+    }
+    .list1 {
+        margin-bottom: 5px;
+    }
+    .cafelist {
+        padding: 10px;
+    }
+
+    @font-face { font-family: 'stencil'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_eight@1.0/stencil.woff') format('woff'); font-weight: normal; font-style: normal; } 
+
+    #PJname{
+        font-family: 'stencil';
+        font-size: 35px;
+    }
+    
+    button{
+        text-decoration: none;
+        border: 1px solid #036635;
+        border-radius: 3px;
+        color: #036635;
+        background-color: white;
+        width: 100px;
+        height: 30px;
+        transition: all 0.2s;
+        font-size: 15px;
+        padding: 3px 5px;
+    }
+    button:hover{
+        background-color: #036635;
+        color: white;
+    }
+    a:link { color: black; text-decoration: none;}
+    a:visited { color: black; text-decoration: none;}
+    a:hover { color: black; text-decoration: none;}
+    a:active { color: black; text-decoration: none;}
+
+    </style>

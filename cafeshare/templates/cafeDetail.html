@@ -1,0 +1,145 @@
+{% load static %}
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-light border-bottom shadow-sm">
+        <h5 class="my-0 mr-md-auto font-weight-normal" id="PJname"><a href="{% url 'home' %}">Varysta</a></h5>
+        <nav class="my-2 my-md-0 mr-md-3">
+            <a id="NavItem" href="{% url 'new' %}"><button type="button">Write</button></a>
+            
+            {% if user.is_authenticated %}
+            <a id="NavItem" href="{% url 'logout' %}"><button type="button">Log out</button></a>
+            {% else %}
+            <a id="NavItem" href="{% url 'login' %}"><button type="button">Log in</button></a>
+            <a id="NavItem" href="{% url 'signup' %}"><button type="button">Sign Up</button></a>
+            
+            {%endif%}
+            <a id="NavItem" href="(소개페이지)"><button type="button">서비스 소개</button></a>
+
+            {% if error %}
+            <p style="color:red;">{{error}}</p>
+            {% endif %}
+        </nav>
+    </div>
+    
+    <br>
+    <br>
+    <div class ='container' style="text-align: center;">
+        <span style="font-weight:bold; font-size:2rem;">{{ detailCafeObject.title }}</span><Br><br>
+      <!--사진 부분  -->
+      <figure class="figure">
+        <img src="{{detailCafeObject.image.url}}"
+        width="60%" height="50%" class="figure-img img-fluid rounded" alt="...">
+        <figcaption class="figure-caption"></figcaption>
+        <br>
+        <br>
+        
+        <!-- 지도 부분 -->
+        <h2> Map </h2>
+        <div class="map">
+            <iframe class name=googlemap src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6322.937849716082!2d127.0503774751896!3d37.591121469173096!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357cbb6d087e178b%3A0x972d7041611cbd71!2z7Y-s67mEKEZvdXJCKSDtmozquLDsoJA!5e0!3m2!1sko!2skr!4v1559373845817!5m2!1sko!2skr" 
+            width="60%" height="40%" frameborder="0" style="border:0" allowfullscreen>
+            </iframe>
+        </div>
+      </figure>
+      
+      <br>
+      <br>
+      <br>
+
+      <table style="text-align: center; margin: auto;">
+        <thead>
+            <caption><h2 style="text-align: center;"> Comment</h2></caption>
+        </thead>
+        <tbody style="text-align: center;">
+            <div class="comments" style="text-align: center;">
+              {% if error %}
+              <p style="color:red;">{{error}}</p>
+              {%endif%}
+
+              <form class="form-group" action="{% url 'cafeDetail' detailCafeObject.id %}" method="POST" style="text-align: center;">
+                  {% csrf_token %}
+                  <tr>
+                      <th style="text-align: center;">제목: </th>
+                      <td><input type="text" placeholder="제목을 입력하세요. " name="comment_title"/></td>
+                  </tr>
+
+                  <tr>
+                      <th style="text-align: center;">내용: </th>
+                      <td><textarea cols="50" rows="10" placeholder="내용을 입력하세요. " name="comment_contents"></textarea></td>
+                  </tr>
+                  
+                  <tr>
+                      <td colspan="2">
+                          <input  value="등록" type="submit">
+                          <a href="{% url 'home' %}">글 목록으로...</a>
+                      </td>
+                  </tr>
+                </form>
+              </div>
+          </tbody>
+      </table>
+      <br>
+      <br>
+          {% if detailCafeObject.author == user %} 
+          <a href="{% url 'delete' detailCafeObject.id %}"> Delete This Post </a>
+          <br>
+          <a href="{% url 'update' detailCafeObject.id %}"> Update This Post </a>
+          {% endif %}
+          <div>
+            <div class name='long'>
+              {% for commentObject in detailCafeObject.comments.all %}
+                <div class="container" style="border: solid #036635; width: 20%; margin: auto;">
+                  <h4> 글쓴이 : {{ commentObject.comment_author}}</h4>
+                  <h4> 제목: {{ commentObject.comment_title}}</h4>
+                  <h5> 내용 : {{ commentObject.comment_contents}}</h5><h5>{{ commentObject.created_date}}</h5>
+                </div>
+                  {% if commentObject.comment_author == user %} 
+                  <a href="{% url 'commentDelete' detailCafeObject.id commentObject.id %}">Comment delete</a>
+                  {%endif%}
+                  <br>
+                  <br>
+                  {% empty %}
+                  <h6>No Comment Here</h6>
+              {% endfor %}
+              </br>  
+            </div>
+          </div>  
+
+        </body>
+<style>
+
+  .comments{font-family :'나눔고딕', 'Malgun Gothic', sans-serif;}
+
+  @font-face { font-family: 'stencil'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_eight@1.0/stencil.woff') format('woff'); font-weight: normal; font-style: normal; } 
+
+    #PJname{
+        font-family: 'stencil';
+        font-size: 35px;
+    }
+    
+    button{
+        text-decoration: none;
+        border: 1px solid #036635;
+        border-radius: 3px;
+        color: #036635;
+        background-color: white;
+        width: 100px;
+        height: 30px;
+        transition: all 0.2s;
+        font-size: 15px;
+        padding: 3px 5px;
+    }
+    button:hover{
+        background-color: #036635;
+        color: white;
+    }
+    a:link { color: black; text-decoration: none;}
+    a:visited { color: black; text-decoration: none;}
+    a:hover { color: black; text-decoration: none;}
+    a:active { color: black; text-decoration: none;}
+
+   
+    
+</style>
